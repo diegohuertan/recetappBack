@@ -1,5 +1,6 @@
 const connection = require('../database/connection');
-
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 class Usuario {
     constructor(id,correo, contraseña, perfil) {
@@ -42,18 +43,28 @@ class Usuario {
         );
     }
     static create(usuarios, callback) {
-        connection.query('INSERT INTO usuarios (id,correo, contraseña, perfil) VALUES (?, ?, ?, ?)',
-            [usuarios.id,usuarios.correo, usuarios.contraseña, usuarios.perfil],
-            (err) => {
+
+        bcrypt.hash(usuarios.contraseña, saltRounds, (err, hash) => {
+          if (err) {
+            console.error(err.message);
+            callback(err);
+          } else {
+            usuarios.contraseña = hash;
+    
+            connection.query('INSERT INTO usuarios (id, correo, contraseña, perfil) VALUES (?, ?, ?, ?)',
+              [usuarios.id, usuarios.correo, usuarios.contraseña, usuarios.perfil],
+              (err) => {
                 if (err) {
-                    console.error(err.message);
-                    callback(err);
+                  console.error(err.message);
+                  callback(err);
                 } else {
-                    callback(null);
+                  callback(null);
                 }
-            }
-        );
-    }
+              }
+            );
+          }
+        });
+      }
     
     // Método estático para eliminar un contacto por su rut
     static deleteById(id, callback) {

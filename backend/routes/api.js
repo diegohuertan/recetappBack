@@ -8,6 +8,8 @@ router.get('/recetas', recetaController.getAllrecetas);
 router.post('/crearRecetas', recetaController.createReceta);
 router.get('/usuarios', usersController.getAllusuarios );
 router.post('/validarsesion', usersController.validarUser);
+router.post('/crearUsuario', usersController.createUser);
+
 
 
 //rutas valoracion
