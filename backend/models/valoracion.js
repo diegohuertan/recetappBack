@@ -53,22 +53,23 @@ class valoracion{
             }
         });
     }
-    static addVal(usuario_id,receta_id,comentario,puntuacion,callback){
-        connection.query('INSERT INTO valoracion(usuario_id,receta_id,comentario,puntuacion) VALUES (?,?,?,?)',[usuario_id,receta_id,comentario,puntuacion],
-        (error,rows)=>{
+    static addVal(valoracion,callback){
+        connection.query('INSERT INTO valoracion(usuario_id,receta_id,comentario,puntuacion) VALUES (?,?,?,?)',
+        [valoracion.usuario_id,valoracion.receta_id,valoracion.comentario,valoracion.puntuacion],
+        (error)=>{
             if(error){
                 console.error('Error al agregar valoracion',error);
                 callback(error,null);
             } else {
                 console.log('Valoracion agregada exitosamente.');
-                callback(null,rows);
+                callback(null);
 
             }
         });
     }
-    static modVal(valoracion_id,usuario_id,receta_id,newCom,newPun){
-        connection.query('UPDATE valoracion SET comentario = ?, puntuacion = ? WHERE valoracion_id = ? AND usuario_id = ? AND receta_id = ?',
-        [newCom,newPun,valoracion_id,usuario_id,receta_id],
+    static modVal(valoracion,callback){
+        connection.query('UPDATE valoracion SET comentario = ?, puntuacion = ? WHERE valoracion_id = ? ',
+        [valoracion.comentario , valoracion.puntuacion ,valoracion.valoracion_id],
         (error,rows)=>{
             if(error){
                 console.error('Error al modificar valoracion',error);

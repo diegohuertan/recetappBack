@@ -16,10 +16,10 @@ exports.getAllusuarios = (req, res) => {
 // Controlador para crear un nuevo user
 exports.createUser = (req, res) => {
     // Obtener los datos del cuerpo de la solicitud
-    const { id,correo, contraseña, perfil  } = req.body;
+    const { usuario_id,correo, contraseña, perfil  } = req.body;
 
     // Crear un nuevo objeto Contact con los datos
-    const newUser = new Usuario(id,correo, contraseña, perfil);
+    const newUser = new Usuario(usuario_id,correo, contraseña, perfil);
 
     // Llamar al método estático "create" del modelo users
     Usuario.create(newUser, (err) => {
@@ -27,7 +27,7 @@ exports.createUser = (req, res) => {
             console.error(err.message);
             res.status(500).send('Error en el servidor');
         } else {
-            res.status(201).send('Contacto creado exitosamente');
+            res.status(201).send('Usuario creado exitosamente');
         }
     });
 };

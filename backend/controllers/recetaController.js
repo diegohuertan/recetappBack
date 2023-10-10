@@ -16,10 +16,10 @@ exports.getAllrecetas = (req, res) => {
 // Controlador para crear un nuevo contacto
 exports.createReceta = (req, res) => {
     // Obtener los datos del cuerpo de la solicitud
-    const { receta_id,usuario_id , titulo, procedimiento, utensilio  } = req.body;
+    const { receta_id , utensilio, titulo   } = req.body;
 
     // Crear un nuevo objeto Contact con los datos
-    const newReceta = new Receta(receta_id,usuario_id , titulo, procedimiento, utensilio);
+    const newReceta = new Receta(receta_id , utensilio, titulo);
 
     // Llamar al método estático "create" del modelo Contact
     Receta.create(newReceta, (err) => {

@@ -50,54 +50,49 @@ exports.delValId = (req,res)=> {
         }
     });
 };
-exports.addVal = (req, res) => {
-    const { usuario_id, receta_id, comentario, puntuacion } = req.body;
+exports.addVal = (req, res) => {      
+    const { usuario_id, receta_id,valoracion_id, comentario, puntuacion } = req.body;
 
-    if (!usuario_id || !receta_id || !comentario || !puntuacion) {
-        return res.status(400).json({ error: 'Todos los campos son requeridos: usuario_id, receta_id, comentario, puntuacion' });
-    }
 
-    const nuevaValoracion = {
+const nuevaValoracion = new valoracion(
         usuario_id,
         receta_id,
+        valoracion_id,
         comentario,
         puntuacion
-    };
+    );
+    
 
     valoracion.addVal(nuevaValoracion, (error, valoracion) => {
         if (error) {
-            return res.status(500).json({ error: 'Error al agregar la valoración' });
+            res.status(500).json({ error: 'Error al agregar la valoración' });
         }
 
         res.status(201).json({ mensaje: 'Valoración agregada exitosamente', valoracion });
-    });
+    }); 
+    
 };
 
 exports.modVal = (req, res) => {
-    const { valoracion_id, usuario_id, receta_id, newCom, newPun} = req.body;
+    const {  usuario_id,receta_id,valoracion_id,comentario, puntuacion} = req.body;
 
-    // Validar que todos los campos necesarios estén presentes
-    if (!valoracion_id || !usuario_id || !receta_id || !newCom || !newPun) {
-        return res.status(400).json({ error: 'Todos los campos son requeridos: valoracion_id, usuario_id, receta_id, nuevoComentario, nuevaPuntuacion' });
-    }
-
+    
     // Crear un objeto con los datos actualizados
-    const valoracionActualizada = {
-        comentario: newCom,
-        puntuacion: newPun
-    };
+    const valoracionActualizada = new valoracion( 
+        usuario_id,
+        receta_id,
+        valoracion_id,
+        comentario,
+        puntuacion
+    );
 
     // Lógica para actualizar la valoración en la base de datos
-    Valoracion.update(valoracion_id, usuario_id, receta_id, valoracionActualizada, (error, resultado) => {
+    valoracion.modVal(valoracionActualizada, (error, resultado) => {
         if (error) {
-            return res.status(500).json({ error: 'Error al modificar la valoración' });
+         res.status(500).json({ error: 'Error al modificar la valoración' });
         }
-
-        if (resultado.affectedRows === 0) {
-            return res.status(404).json({ error: 'No se encontró ninguna valoración para el ID proporcionado' });
-        }
-
+        console.log(resultado);
         // Valoración modificada exitosamente
-        res.status(200).json({ mensaje: 'Valoración modificada exitosamente' });
+        res.status(200).json({ mensaje: 'Valoración modificada exitosamente' , valoracionActualizada});
     });
 };
