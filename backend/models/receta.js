@@ -2,12 +2,10 @@ const connection = require('../database/connection');
 
 
 class Receta {
-    constructor(receta_id,usuario_id, utensilio, titulo, procedimiento) {
+    constructor(receta_id, utensilio, titulo, procedimiento) {
         this.receta_id = receta_id;
         this.utensilio = utensilio;
         this.titulo = titulo;
-        this.procedimiento = procedimiento;
-        this.usuario_id =usuario_id;
     }
 
     static getAll(callback) {
@@ -22,8 +20,8 @@ class Receta {
     }
 
     static create(receta, callback) {
-        connection.query('INSERT INTO receta (receta_id, usuario_id, utensilio, titulo, procedimiento) VALUES (?, ?, ?, ?, ?)',
-            [receta.receta_id,receta.usuario_id , receta.titulo, receta.procedimiento, receta.utensilio],
+        connection.query('INSERT INTO receta (receta_id, utensilio, titulo) VALUES (?, ?, ?)',
+            [receta.receta_id, receta.utensilio, receta.titulo],
             (err) => {
                 if (err) {
                     console.error(err.message);
@@ -35,6 +33,53 @@ class Receta {
         );
     }
     
+    static filterByid(receta_id,callback){
+        
+        connection.query('SELECT * FROM receta where receta_id = ?', [receta_id], 
+        (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                callback(err, null);
+            }
+            else{
+                callback(null, rows);
+            }
+            
+        });
+    }
+
+    static filterBytitulo(titulo,callback){
+        
+        connection.query('SELECT * FROM receta where titulo = ?', [titulo], 
+        (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                callback(err, null);
+            }
+            else{
+                callback(null, rows);
+            }
+            
+        });
+    }
+
+    static filterByutensilio(utensilio,callback){
+        
+        connection.query('SELECT * FROM receta where utensilio = ?', [utensilio], 
+        (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                callback(err, null);
+            }
+            else{
+                callback(null, rows);
+            }
+            
+        });
+    }
+
+
+
     // Método estático para eliminar un contacto por su rut
     static deleteById(receta_id, callback) {
         db.run('DELETE FROM receta WHERE receta_id = ?', [receta_id], (err) => {

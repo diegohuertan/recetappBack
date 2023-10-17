@@ -5,9 +5,14 @@ const usersController = require('../controllers/usersController')
 const valoracionController = require ('../controllers/valoracionController')
 
 router.get('/recetas', recetaController.getAllrecetas);
+router.post('/filtrarId', recetaController.filterByreceta_id);
+router.post('/filtrarTitulo', recetaController.filterBytitulo);
+router.post('/filtrarUtensilio', recetaController.filterByutensilio);
 router.post('/crearRecetas', recetaController.createReceta);
 router.get('/usuarios', usersController.getAllusuarios );
 router.post('/validarsesion', usersController.validarUser);
+router.post('/crearUsuario', usersController.createUser);
+
 
 
 //rutas valoracion
