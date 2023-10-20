@@ -14,9 +14,9 @@ exports.listIngredients = (req, res) => {
 exports.createIngredients = (req, res) => {
     const {ingrediente_id, nombre, descripcion, unidad_medida} = req.body;
 
-    const Ingrediente = new Ingrediente(ingrediente_id, nombre, descripcion, unidad_medida);
+    const newingrediente = new Ingrediente(ingrediente_id, nombre, descripcion, unidad_medida);
 
-    Ingrediente.create(Ingrediente, (err) => {
+    Ingrediente.create(newingrediente, (err) => {
         if (err) {
             console.error(err.message);
             res.status(500).send('Error en el servidor');
@@ -29,7 +29,7 @@ exports.createIngredients = (req, res) => {
 exports.deleteByIngredienteid = (req, res) => {
     const {ingrediente_id} = req.params;
 
-    Receta.deletebyId(titulo, (err, result) => {
+    Ingrediente.deletebyId(titulo, (err, result) => {
         if (err) {
             console.error(err.message);
             res.status(500).send( 'Error en el servidor.');
@@ -46,7 +46,7 @@ exports.filterByIngrediente_id = (req, res) => {
         } = req.body;
 
     
-    Receta.filterByid(ingrediente_id, (err, result) => {
+    Ingrediente.filterByid(ingrediente_id, (err, result) => {
         if (err) {
             console.error(err.message);
             res.status(500).send( 'Error en el servidor.');
@@ -62,7 +62,7 @@ exports.filterBynombre = (req, res) => {
         } = req.body;
 
     
-    Receta.filterBynombre(nombre, (err, result) => {
+    Ingrediente.filterBynombre(nombre, (err, result) => {
         if (err) {
             console.error(err.message);
             res.status(500).send( 'Error en el servidor.');
@@ -78,7 +78,7 @@ exports.filterBydescripcion = (req, res) => {
         } = req.body;
 
     
-    Receta.filterBydescripcion(descripcion, (err, result) => {
+    Ingrediente.filterBydescripcion(descripcion, (err, result) => {
         if (err) {
             console.error(err.message);
             res.status(500).send( 'Error en el servidor.');
@@ -94,7 +94,7 @@ exports.filterByUnidad_medida = (req, res) => {
         } = req.body;
 
     
-    Receta.filterByunidad_medida(unidad_medida, (err, result) => {
+    Ingrediente.filterByunidad_medida(unidad_medida, (err, result) => {
         if (err) {
             console.error(err.message);
             res.status(500).send( 'Error en el servidor.');

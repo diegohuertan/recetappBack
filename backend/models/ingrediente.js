@@ -9,14 +9,14 @@ class Ingrediente{
     }
 
     static getAll(callback){
-        connection.query('SELECT * FROM ingrediente'),(err, rows) => {
+        connection.query('SELECT * FROM ingrediente',(err, rows) => {
             if(err){
-                console.error(error.message);
+                console.error(err.message);
                 callback(err);
             } else{
                 callback(null, rows);
             }
-        }
+        });
     }
 
     static create(ingrediente, callback){
