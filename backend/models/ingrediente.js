@@ -1,6 +1,6 @@
 const connection = require('../database/connection');
 
-class getAllIngrediente{
+class Ingrediente{
     constructor(ingrediente_id, nombre, descripcion, unidad_medida){
         this.ingrediente_id = ingrediente_id;
         this.nombre = nombre;
@@ -19,31 +19,33 @@ class getAllIngrediente{
         }
     }
 
-    static add(ingrediente, callback){
-        connection.query('INSERT INTO ingrediente (ingrediente_id, nombre, descripcion, unidad_medida) VALUES (?, ?, ?, ?)', 
-            [ingrediente.ingrediente_id, ingrediente.nombre, ingrediente.descripcion, ingrediente.unidad_medida],
+    static create(ingrediente, callback){
+        connection.query('INSERT INTO ingrediente (ingrediente_id, nombre, descripcion, unidad_medida) VALUES (?, ?, ?, ?)',
+            [ingrediente.ingrediente_id, ingrediente.nombre, ingrediente.descripcion, ingrediente.unidad_medida], 
             (err) => {
-                 if(err){
+                if(err){
                     console.error(err.message);
                     callback(err);
-                } else{
+                } else {
                     callback(null);
                 }
             }
         );
     }
 
-    static delete(i, callback){
-        connection.query('DELETE FROM ingrediente WHERE ingrediente_id = ?', 
-            [i.ingrediente_id], 
-            (err) => {
-                if(err){
-                    console.error(err.message);
-                    callback(err);
-                } else{
-                    callback(null);
-                }
+    static delete(id, callback){
+        connection.query('DELETE FROM ingrediente WHERE id = ?', [id],
+        (error, row) =>{
+            if(error){
+                console.error(error.message);
+                callback(error);
+            } else {
+                callback(null, row);
             }
-        );
+
+        });
     }
+
 }
+
+module.exports = Ingrediente;

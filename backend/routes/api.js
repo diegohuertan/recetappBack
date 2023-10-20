@@ -3,6 +3,7 @@ const router = express.Router();
 const recetaController = require('../controllers/recetaController')
 const usersController = require('../controllers/usersController')
 const valoracionController = require ('../controllers/valoracionController')
+const ingredienteController = require ('../controllers/ingredienteController')
 
 router.get('/recetas', recetaController.getAllrecetas);
 router.post('/filtrarId', recetaController.filterByreceta_id);
@@ -24,5 +25,13 @@ router.delete('/borrarValoracion/:id',valoracionController.delValId);// borrar v
 router.put('/editarValoracion',valoracionController.modVal);// editar valoracion
 
 
+//rutas Ingrediente
+router.get('/ingredientes', ingredienteController.listIngredients);
+router.post('/crearIngrediente', ingredienteController.createIngredients);
+router.post('/borrarIngrediente', ingredienteController.deleteByIngredienteid);
+router.post('/filtrarIngrediente', ingredienteController.filterByIngrediente_id);
+router.post('/filtrarNombre', ingredienteController.filterBynombre);
+router.post('/filtrarDescripcion', ingredienteController.filterBydescripcion);
+router.post('/filtrarUnidad_medida', ingredienteController.filterByUnidad_medida);
 
 module.exports = router;
