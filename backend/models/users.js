@@ -1,17 +1,18 @@
 const connection = require('../database/connection');
-
+const bcrypt = require('bcrypt');
+const saltRounds = 5;
 
 class Usuario {
-    constructor(id,correo, contraseña, perfil) {
-        this.id = id;
+    constructor(usuario_id, correo, contraseña, perfil) {
+        this.usuario_id = usuario_id;
         this.correo = correo;
         this.contraseña = contraseña;
         this.perfil = perfil;
-       
+
     }
 
     static getAll(callback) {
-        connection.query('SELECT * FROM usuarios', (err, rows) => {
+        connection.query('SELECT * FROM usuario', (err, rows) => {
             if (err) {
                 console.error(err.message);
                 callback(err);
@@ -23,7 +24,7 @@ class Usuario {
 
     static validar(usuarios, callback) {
         connection.query(
-           'SELECT COUNT(*) AS count FROM usuarios WHERE correo = ? AND contraseña = ? AND perfil = ? ',
+            'SELECT COUNT(*) AS count FROM usuario WHERE correo = ? AND contraseña = ? AND perfil = ? ',
             [usuarios.correo, usuarios.contraseña, usuarios.perfil],
             (error, results) => {
                 if (error) {
@@ -42,22 +43,32 @@ class Usuario {
         );
     }
     static create(usuarios, callback) {
-        connection.query('INSERT INTO usuarios (id,correo, contraseña, perfil) VALUES (?, ?, ?, ?)',
-            [usuarios.id,usuarios.correo, usuarios.contraseña, usuarios.perfil],
-            (err) => {
-                if (err) {
-                    console.error(err.message);
-                    callback(err);
-                } else {
-                    callback(null);
-                }
+
+        bcrypt.hash(usuarios.contraseña, saltRounds, (err, hash) => {
+            if (err) {
+                console.error(err.message);
+                callback(err);
+            } else {
+                usuarios.contraseña = hash;
+
+                connection.query('INSERT INTO usuario (usuario_id, correo, contraseña, perfil) VALUES (?, ?, ?, ?)',
+                    [usuarios.usuario_id, usuarios.correo, usuarios.contraseña, usuarios.perfil],
+                    (err) => {
+                        if (err) {
+                            console.error(err.message);
+                            callback(err);
+                        } else {
+                            callback(null);
+                        }
+                    }
+                );
             }
-        );
+        });
     }
-    
+
     // Método estático para eliminar un contacto por su rut
     static deleteById(id, callback) {
-        connection.query('DELETE FROM usuarios WHERE id = ?', [id], (err) => {
+        connection.query('DELETE FROM usuario WHERE id = ?', [id], (err) => {
             if (err) {
                 console.error(err.message);
                 callback(err);
