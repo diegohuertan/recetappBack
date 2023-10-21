@@ -29,7 +29,7 @@ exports.createIngredients = (req, res) => {
 exports.deleteByIngredienteid = (req, res) => {
     const {ingrediente_id} = req.params;
 
-    Ingrediente.deletebyId(titulo, (err, result) => {
+    Ingrediente.deleteById(ingrediente_id, (err, result) => {
         if (err) {
             console.error(err.message);
             res.status(500).send( 'Error en el servidor.');
@@ -62,7 +62,7 @@ exports.filterBynombre = (req, res) => {
         } = req.body;
 
     
-    Ingrediente.filterBynombre(nombre, (err, result) => {
+    Ingrediente.filterByNombre(nombre, (err, result) => {
         if (err) {
             console.error(err.message);
             res.status(500).send( 'Error en el servidor.');
@@ -72,13 +72,13 @@ exports.filterBynombre = (req, res) => {
     });
 }
 
-exports.filterBydescripcion = (req, res) => {
+exports.filterByDescripcion = (req, res) => {
      const {
         descripcion
         } = req.body;
 
     
-    Ingrediente.filterBydescripcion(descripcion, (err, result) => {
+    Ingrediente.filterByDescripcion(descripcion, (err, result) => {
         if (err) {
             console.error(err.message);
             res.status(500).send( 'Error en el servidor.');
@@ -94,7 +94,7 @@ exports.filterByUnidad_medida = (req, res) => {
         } = req.body;
 
     
-    Ingrediente.filterByunidad_medida(unidad_medida, (err, result) => {
+    Ingrediente.filterByUnidad_medida(unidad_medida, (err, result) => {
         if (err) {
             console.error(err.message);
             res.status(500).send( 'Error en el servidor.');

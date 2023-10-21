@@ -13,6 +13,7 @@ router.post('/crearRecetas', recetaController.createReceta);
 router.get('/usuarios', usersController.getAllusuarios );
 router.post('/validarsesion', usersController.validarUser);
 router.post('/crearUsuario', usersController.createUser);
+router.delete('/borrarReceta', recetaController.deleterecetaByid);
 
 
 
@@ -28,10 +29,10 @@ router.put('/editarValoracion',valoracionController.modVal);// editar valoracion
 //rutas Ingrediente
 router.get('/ingredientes', ingredienteController.listIngredients);
 router.post('/crearIngrediente', ingredienteController.createIngredients);
-router.post('/borrarIngrediente', ingredienteController.deleteByIngredienteid);
-router.post('/filtrarIngrediente', ingredienteController.filterByIngrediente_id);
+router.delete('/borrarIngrediente', ingredienteController.deleteByIngredienteid);
+router.post('/filtrarIngredienteId', ingredienteController.filterByIngrediente_id);
 router.post('/filtrarNombre', ingredienteController.filterBynombre);
-router.post('/filtrarDescripcion', ingredienteController.filterBydescripcion);
+router.post('/filtrarDescripcion', ingredienteController.filterByDescripcion);
 router.post('/filtrarUnidad_medida', ingredienteController.filterByUnidad_medida);
 
 module.exports = router;
