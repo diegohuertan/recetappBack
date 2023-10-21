@@ -33,16 +33,69 @@ class Ingrediente{
         );
     }
 
-    static delete(id, callback){
-        connection.query('DELETE FROM ingrediente WHERE id = ?', [id],
-        (error, row) =>{
+    static deleteById(ingrediente_id, callback){
+        connection.query('DELETE FROM ingrediente WHERE ingrediente_id = ?', [ingrediente_id],
+        (error) =>{
             if(error){
                 console.error(error.message);
                 callback(error);
             } else {
-                callback(null, row);
+                callback(null);
             }
 
+        });
+    }
+
+    static filterByid(ingrediente_id, callback){
+
+        connection.query('SELECT * FROM ingrediente WHERE ingrediente_id = ?', [ingrediente_id],
+        (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                callback(err, null);
+            }
+            else{
+                callback(null, rows);
+            }
+        });
+    }
+
+    static filterByNombre(nombre, callback){
+        connection.query('SELECT * FROM ingrediente WHERE nombre = ?', [nombre],
+        (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                callback(err, null);
+            }
+            else{
+                callback(null, rows);
+            }
+        });
+    }
+
+    static filterByDescripcion(descripcion, callback){
+        connection.query('SELECT * FROM ingrediente WHERE descripcion = ?', [descripcion],
+        (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                callback(err, null);
+            }
+            else{
+                callback(null, rows);
+            }
+        });
+    }
+
+    static filterByUnidad_medida(unidad_medida, callback){
+        connection.query('SELECT * FROM ingrediente WHERE unidad_medida = ?', [unidad_medida],
+        (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                callback(err, null);
+            }
+            else{
+                callback(null, rows);
+            }
         });
     }
 
