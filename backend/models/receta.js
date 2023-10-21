@@ -126,12 +126,12 @@ class Receta {
      * @param {function} callback - La función de retorno de llamada.
      */
     static deleteById(receta_id, callback) {
-        connection.query('DELETE FROM receta WHERE receta_id = ?', [receta_id], (err) => {
+        connection.query('DELETE FROM receta WHERE receta_id = ?', [receta_id], (err,rows) => {
             if (err) {
                 console.error(err.message);
                 callback(err);
             } else {
-                callback(null);
+                callback(null, rows);
             }
         });
     }

@@ -86,7 +86,8 @@ exports.filterByutensilio = (req, res) => {
 
 
 exports.deleterecetaByid = (req, res) => {
-    const { receta_id } = req.params;
+    const { receta_id } = req.body;
+    console.log(receta_id);
 
     Receta.deleteById(receta_id, (err) => {
         if (err) {
