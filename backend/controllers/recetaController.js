@@ -16,10 +16,10 @@ exports.getAllrecetas = (req, res) => {
 // Controlador para crear un nuevo contacto
 exports.createReceta = (req, res) => {
     // Obtener los datos del cuerpo de la solicitud
-    const { receta_id , utensilio, titulo   } = req.body;
+    const { receta_id , utensilio, titulo , imagen  } = req.body;
 
     // Crear un nuevo objeto Contact con los datos
-    const newReceta = new Receta(receta_id , utensilio, titulo);
+    const newReceta = new Receta(receta_id , utensilio, titulo, imagen);
 
     // Llamar al método estático "create" del modelo Contact
     Receta.create(newReceta, (err) => {
@@ -88,12 +88,12 @@ exports.filterByutensilio = (req, res) => {
 exports.deleterecetaByid = (req, res) => {
     const { receta_id } = req.params;
 
-    Receta.deletebyId(rut, (err) => {
+    Receta.deleteById(receta_id, (err) => {
         if (err) {
             console.error(err.message);
             res.status(500).send('Error en el servidor');
         } else {
-            res.status(200).send('Contacto eliminado exitosamente');
+            res.status(200).send('Receta eliminada exitosamente');
         }
     });
-};
+}

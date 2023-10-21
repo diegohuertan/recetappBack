@@ -13,6 +13,7 @@ router.post('/crearRecetas', recetaController.createReceta);
 router.get('/usuarios', usersController.getAllusuarios );
 router.post('/validarsesion', usersController.validarUser);
 router.post('/crearUsuario', usersController.createUser);
+router.delete('/borrarReceta', recetaController.deleterecetaByid);
 
 
 
