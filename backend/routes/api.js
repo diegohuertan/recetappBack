@@ -4,6 +4,8 @@ const recetaController = require('../controllers/recetaController')
 const usersController = require('../controllers/usersController')
 const valoracionController = require ('../controllers/valoracionController')
 const ingredienteController = require ('../controllers/ingredienteController')
+const instruccionController = require('../controllers/instruccionController');
+const { crearIntruccion } = require('../models/instruccion');
 
 router.get('/recetas', recetaController.getAllrecetas);
 router.post('/filtrarId', recetaController.filterByreceta_id);
@@ -35,4 +37,13 @@ router.post('/filtrarNombre', ingredienteController.filterBynombre);
 router.post('/filtrarDescripcion', ingredienteController.filterByDescripcion);
 router.post('/filtrarUnidad_medida', ingredienteController.filterByUnidad_medida);
 
+
+//rutas Intruccion
+router.get('/instruccion', instruccionController.getInstrucciones);
+router.post('/crearInstruccion', instruccionController.createInstrucciones);
+router.delete('/borrarInstruccion', instruccionController.borrarInstrucciones);
+router.post('/filtrarInstruccionId', instruccionController.filterByInstruccionId);
+router.post('/filtrarRecetaId', instruccionController.filterByRecetaId);
+router.post('/filtrarDescripcion', instruccionController.filterByDescripcion);
+router.post('/filtrarTip', instruccionController.filterByTip);
 module.exports = router;
