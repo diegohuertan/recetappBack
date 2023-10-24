@@ -12,10 +12,9 @@ router.post('/filtrarId', recetaController.filterByreceta_id);
 router.post('/filtrarTitulo', recetaController.filterBytitulo);
 router.post('/filtrarUtensilio', recetaController.filterByutensilio);
 router.delete('/borrarReceta', recetaController.deleterecetaByid);
-
+router.post('/crearRecetas', recetaController.createReceta);
 
 //rutas usuario
-router.post('/crearRecetas', recetaController.createReceta);
 router.get('/usuarios', usersController.getAllusuarios );
 router.get('/getbyCorreo',usersController.getUserbyCorreo );
 router.post('/validarsesion', usersController.validarUser);

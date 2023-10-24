@@ -13,9 +13,7 @@ exports.getAllusuarios = (req, res) => {
     });
 };
 exports.getUserbyCorreo = (req,res)=>{
-    const {
-        correo
-        } =req.body;
+    const correo=req.query.correo;
     Usuario.getbyCorreo(correo,(error,result)=>{
         if (error){
             console.error(error.mensaje);
