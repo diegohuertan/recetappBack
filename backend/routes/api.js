@@ -7,16 +7,20 @@ const ingredienteController = require ('../controllers/ingredienteController')
 const instruccionController = require('../controllers/instruccionController');
 const { crearIntruccion } = require('../models/instruccion');
 
+
+//rutas recetas
 router.get('/recetas', recetaController.getAllrecetas);
 router.post('/filtrarId', recetaController.filterByreceta_id);
 router.post('/filtrarTitulo', recetaController.filterBytitulo);
 router.post('/filtrarUtensilio', recetaController.filterByutensilio);
+router.delete('/borrarReceta', recetaController.deleterecetaByid);
 router.post('/crearRecetas', recetaController.createReceta);
+
+//rutas usuario
 router.get('/usuarios', usersController.getAllusuarios );
+router.get('/getbyCorreo',usersController.getUserbyCorreo );
 router.post('/validarsesion', usersController.validarUser);
 router.post('/crearUsuario', usersController.createUser);
-router.delete('/borrarReceta', recetaController.deleterecetaByid);
-
 
 
 //rutas valoracion
