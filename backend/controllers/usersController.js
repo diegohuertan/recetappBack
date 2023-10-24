@@ -12,7 +12,19 @@ exports.getAllusuarios = (req, res) => {
         }
     });
 };
-
+exports.getUserbyCorreo = (req,res)=>{
+    const {
+        correo
+        } =req.body;
+    Usuario.getbyCorreo(correo,(error,result)=>{
+        if (error){
+            console.error(error.mensaje);
+            res.status(500).send('Error en el servidor');
+        } else {
+            res.status(200).json(result);
+        }
+    });
+};
 // Controlador para crear un nuevo user
 exports.createUser = (req, res) => {
     // Obtener los datos del cuerpo de la solicitud

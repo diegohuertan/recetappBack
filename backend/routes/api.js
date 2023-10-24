@@ -5,16 +5,21 @@ const usersController = require('../controllers/usersController')
 const valoracionController = require ('../controllers/valoracionController')
 const ingredienteController = require ('../controllers/ingredienteController')
 
+
+//rutas recetas
 router.get('/recetas', recetaController.getAllrecetas);
 router.post('/filtrarId', recetaController.filterByreceta_id);
 router.post('/filtrarTitulo', recetaController.filterBytitulo);
 router.post('/filtrarUtensilio', recetaController.filterByutensilio);
-router.post('/crearRecetas', recetaController.createReceta);
-router.get('/usuarios', usersController.getAllusuarios );
-router.post('/validarsesion', usersController.validarUser);
-router.post('/crearUsuario', usersController.createUser);
 router.delete('/borrarReceta', recetaController.deleterecetaByid);
 
+
+//rutas usuario
+router.post('/crearRecetas', recetaController.createReceta);
+router.get('/usuarios', usersController.getAllusuarios );
+router.get('/getbyCorreo',usersController.getUserbyCorreo );
+router.post('/validarsesion', usersController.validarUser);
+router.post('/crearUsuario', usersController.createUser);
 
 
 //rutas valoracion

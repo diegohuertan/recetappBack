@@ -21,7 +21,17 @@ class Usuario {
             }
         });
     }
-
+    static getbyCorreo(correo,callback){
+        connection.query('Select usuario_id,correo,perfil from usuario WHERE correo = ?',[correo],
+        (error,rows)=>{
+            if (error){
+                console.error('Error al realizar la consulta: ',error);
+                callback(error,null);
+            } else{
+                callback(null,rows);
+            }
+        });
+    }
     static validar(usuarios, callback) {
         connection.query(
             'SELECT COUNT(*) AS count FROM usuario WHERE correo = ? AND contraseña = ? AND perfil = ? ',
