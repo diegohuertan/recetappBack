@@ -32,20 +32,21 @@ class Usuario {
             }
         });
     }
-    static validar(usuarios, callback) {
+    static validar(correo,contraseña, perfil, callback) {
         connection.query(
-            'SELECT COUNT(*) AS count FROM usuario WHERE correo = ? AND contraseña = ? AND perfil = ? ',
-            [usuarios.correo, usuarios.contraseña, usuarios.perfil],
+            'SELECT COUNT(*) AS count FROM usuario WHERE correo = ? AND perfil = ? ',
+            [correo, perfil],
             (error, results) => {
                 if (error) {
                     console.error('Error al realizar la consulta:', error);
                     callback(error, null); // Llama al callback con el error
                 } else {
+                    console.log('Results:', results);
                     const count = results[0].count;
                     console.log('Count:', count);
-                    if (count === 1) {
+                    if (count == 1) {
                         callback(null, { success: true, message: 'Inicio de sesión exitoso' });
-                    } else {
+                    } else if (count == 0) {
                         callback(null, { success: false, message: 'Credenciales de inicio de sesión no válidas' });
                     }
                 }

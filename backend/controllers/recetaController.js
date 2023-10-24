@@ -83,6 +83,66 @@ exports.filterByutensilio = (req, res) => {
     });
 }
 
+// Controlador para obtener todas las recetas con sus ingredientes y promedio de valoración
+exports.getRecetasConIngredientesYValoracionPromedio = (req, res) => {
+    Receta.getRecetasConIngredientesYValoracionPromedio((err, rows) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).send('Error en el servidor');
+        } else {
+            res.json(rows);
+        }
+    });
+};
+
+exports.getRecetasConValoracionPromedioPorCorreo = (req, res) => {
+    Receta.getRecetasConValoracionPromedioPorCorreo((err, rows) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).send('Error en el servidor');
+        } else {
+            res.json(rows);
+        }
+    });
+};
+
+
+// Controlador para obtener las recetas con la cantidad de ingredientes que tienen
+exports.getRecetasConCantidadDeIngredientes = (req, res) => {
+    Receta.getRecetasConCantidadDeIngredientes((err, rows) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).send('Error en el servidor');
+        } else {
+            res.json(rows);
+        }
+    });
+};
+
+// Controlador para obtener las recetas con su promedio de valoración
+exports.getRecetasConPromedioValoracion = (req, res) => {
+    Receta.getRecetasConPromedioValoracion((err, rows) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).send('Error en el servidor');
+        } else {
+            res.json(rows);
+        }
+    });
+};
+
+
+// Controlador para obtener los usuarios con la cantidad de valoraciones que tienen con una puntuación mayor o igual a 4
+exports.getUsuariosConCantidadDeValoraciones = (req, res) => {
+    Receta.getUsuariosConCantidadDeValoraciones((err, rows) => {
+        if (err) {
+            console.error(err.message);
+            res.status(500).send('Error en el servidor');
+        } else {
+            res.json(rows);
+        }
+    });
+};
 
 
 exports.deleterecetaByid = (req, res) => {

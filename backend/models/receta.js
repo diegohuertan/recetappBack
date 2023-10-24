@@ -120,6 +120,123 @@ class Receta {
     }
 
     /**
+     * Obtiene las recetas con sus ingredientes y promedio de valoración.
+     * @static
+     * @param {function} callback - La función de retorno de llamada.
+     */
+    static getRecetasConIngredientesYValoracionPromedio(callback) {
+        connection.query(`
+            SELECT R.titulo, I.nombre AS ingrediente, AVG(V.puntuacion) AS promedio_valoracion
+            FROM receta R
+            JOIN r_ingrediente_receta RI ON R.receta_id = RI.receta_id
+            JOIN ingrediente I ON RI.ingrediente_id = I.ingrediente_id
+            LEFT JOIN valoracion V ON R.receta_id = V.receta_id
+            GROUP BY R.titulo, I.nombre
+            HAVING COUNT(V.valoracion_id) >= 3
+            ORDER BY promedio_valoracion DESC;
+        `, (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                callback(err);
+            } else {
+                callback(null, rows);
+            }
+        });
+    }
+
+    /**
+     * Obtiene las recetas con sus ingredientes y promedio de valoración.
+     * @static
+     * @param {function} callback - La función de retorno de llamada.
+     */
+    static getRecetasConValoracionPromedioPorCorreo(callback) {
+        connection.query(`
+            SELECT U.correo, R.titulo, AVG(V.puntuacion) AS promedio_valoracion
+            FROM usuario U
+            JOIN r_usuario_receta UR ON U.usuario_id = UR.usuario_id
+            JOIN receta R ON UR.receta_id = R.receta_id
+            LEFT JOIN valoracion V ON R.receta_id = V.receta_id
+            GROUP BY U.correo, R.titulo
+            ORDER BY U.correo, promedio_valoracion DESC;
+        `, (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                callback(err);
+            } else {
+                callback(null, rows);
+            }
+        });
+    }
+
+    /**
+     * Obtiene las recetas con la cantidad de ingredientes que tienen.
+     * @static
+     * @param {function} callback - La función de retorno de llamada.
+     */
+    static getRecetasConCantidadDeIngredientes(callback) {
+        connection.query(`
+            SELECT R.titulo, COUNT(I.ingrediente_id) AS cantidad_ingredientes
+            FROM receta R
+            JOIN r_ingrediente_receta RI ON R.receta_id = RI.receta_id
+            JOIN ingrediente I ON RI.ingrediente_id = I.ingrediente_id
+            GROUP BY R.titulo
+            HAVING COUNT(I.ingrediente_id) >= 2;
+        `, (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                callback(err);
+            } else {
+                callback(null, rows);
+            }
+        });
+    }
+
+    /**
+     * Obtiene las recetas con su promedio de valoración.
+     * @static
+     * @param {function} callback - La función de retorno de llamada.
+     */
+    static getRecetasConPromedioValoracion(callback) {
+        connection.query(`
+            SELECT R.titulo, AVG(V.puntuacion) AS promedio_valoracion
+            FROM receta R
+            LEFT JOIN valoracion V ON R.receta_id = V.receta_id
+            GROUP BY R.titulo
+            HAVING AVG(V.puntuacion) > 4;
+        `, (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                callback(err);
+            } else {
+                callback(null, rows);
+            }
+        });
+    }
+
+    /**
+     * Obtiene los usuarios con la cantidad de valoraciones que tienen con una puntuación mayor o igual a 4.
+     * @static
+     * @param {function} callback - La función de retorno de llamada.
+     */
+    static getUsuariosConCantidadDeValoraciones(callback) {
+        connection.query(`
+            SELECT U.correo, COUNT(V.valoracion_id) AS cantidad_valoraciones
+            FROM usuario U
+            JOIN valoracion V ON U.usuario_id = V.usuario_id
+            WHERE V.puntuacion >= '4'
+            GROUP BY U.correo
+            HAVING COUNT(V.valoracion_id) > 1;
+        `, (err, rows) => {
+            if (err) {
+                console.error(err.message);
+                callback(err);
+            } else {
+                callback(null, rows);
+            }
+        });
+    }
+
+    /**
      * Elimina una receta por ID.
      * @static
      * @param {number} receta_id - El ID de la receta a eliminar.

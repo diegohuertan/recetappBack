@@ -15,6 +15,12 @@ router.post('/filtrarTitulo', recetaController.filterBytitulo);
 router.post('/filtrarUtensilio', recetaController.filterByutensilio);
 router.delete('/borrarReceta', recetaController.deleterecetaByid);
 router.post('/crearRecetas', recetaController.createReceta);
+router.get('/getRecetasConIngredientesYValoracionPromedio', recetaController.getRecetasConIngredientesYValoracionPromedio);
+router.get('/getRecetasConValoracionPromedioPorCorreo', recetaController.getRecetasConValoracionPromedioPorCorreo);
+router.get('/getRecetasConCantidadDeIngredientes', recetaController.getRecetasConCantidadDeIngredientes);
+router.get('/getRecetasConPromedioValoracion', recetaController.getRecetasConPromedioValoracion);
+router.get('/getUsuariosConCantidadDeValoraciones', recetaController.getUsuariosConCantidadDeValoraciones);   
+
 
 //rutas usuario
 router.get('/usuarios', usersController.getAllusuarios );
