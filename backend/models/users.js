@@ -1,6 +1,8 @@
 const connection = require('../database/connection');
 const bcrypt = require('bcrypt');
 const saltRounds = 5;
+const jwt = require('jsonwebtoken');
+
 
 class Usuario {
     constructor(usuario_id, correo, contraseña, perfil) {
@@ -32,28 +34,51 @@ class Usuario {
             }
         });
     }
-    static validar(correo,contraseña, perfil, callback) {
-        connection.query(
-            'SELECT COUNT(*) AS count FROM usuario WHERE correo = ? AND perfil = ? ',
-            [correo, perfil],
-            (error, results) => {
-                if (error) {
-                    console.error('Error al realizar la consulta:', error);
-                    callback(error, null); // Llama al callback con el error
-                } else {
-                    console.log('Results:', results);
-                    const count = results[0].count;
-                    console.log('Count:', count);
-                    if (count == 1) {
-                        callback(null, { success: true, message: 'Inicio de sesión exitoso' });
-                    } else if (count == 0) {
+ 
+static validar(correo, contraseña , callback) {
+    connection.query(
+        'SELECT usuario_id, contraseña FROM usuario WHERE correo = ?',
+        [correo],
+        (error, results) => {
+            if (error) {
+                console.error('Error al realizar la consulta:', error);
+                callback(error, null); // Llama al callback con el error
+            } else if (results.length > 0) {
+                    
+                    bcrypt.compare(contraseña, results[0].contraseña, function(err, result) {
+                        if (result == true) {            
+                            const token = jwt.sign({ usuario_id: results[0].usuario_id, correo: correo }, 'clavesita', { expiresIn: '1h' });                        callback(null, { success: true, message: 'Inicio de sesión exitoso token de sesion creado' ,token: token});
+                        console.log(result)
+
+
+                    } else {
                         callback(null, { success: false, message: 'Credenciales de inicio de sesión no válidas' });
+                        
+
                     }
-                }
+                });
+            
+            } else {
+                callback(null, { success: false, message: 'Credenciales de inicio de sesión no válidas' });
+                
             }
-        );
-    }
-    static create(usuarios, callback) {
+        }
+    );
+}   
+
+static ObtenerUsuarioPorjwt(token, callback) {
+
+    jwt.verify(token, 'clavesita', function(err, decoded) {
+        if (err) {
+            callback(err, null);
+        } else {
+            callback(null, decoded);
+        }
+    });
+
+}
+
+static create(usuarios, callback) {
 
         bcrypt.hash(usuarios.contraseña, saltRounds, (err, hash) => {
             if (err) {

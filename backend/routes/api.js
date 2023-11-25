@@ -5,11 +5,10 @@ const usersController = require('../controllers/usersController')
 const valoracionController = require ('../controllers/valoracionController')
 const ingredienteController = require ('../controllers/ingredienteController')
 const instruccionController = require('../controllers/instruccionController');
-const { crearIntruccion } = require('../models/instruccion');
-
+const recetaNoSqlController = require('../controllers/nosql/recetanosqlcontroller');
 
 //rutas recetas
-router.get('/recetas', recetaController.getAllrecetas);
+router.get('/recetas', recetaNoSqlController.getAllrecetas);
 router.post('/filtrarId', recetaController.filterByreceta_id);
 router.post('/filtrarTitulo', recetaController.filterBytitulo);
 router.post('/filtrarUtensilio', recetaController.filterByutensilio);
@@ -20,13 +19,19 @@ router.get('/getRecetasConValoracionPromedioPorCorreo', recetaController.getRece
 router.get('/getRecetasConCantidadDeIngredientes', recetaController.getRecetasConCantidadDeIngredientes);
 router.get('/getRecetasConPromedioValoracion', recetaController.getRecetasConPromedioValoracion);
 router.get('/getUsuariosConCantidadDeValoraciones', recetaController.getUsuariosConCantidadDeValoraciones);   
+router.post('/crearRecetaNoSql', recetaNoSqlController.createReceta);
 
 
 //rutas usuario
+router.post('/obtenerUsuario', usersController.obtenerUser);
 router.get('/usuarios', usersController.getAllusuarios );
 router.get('/getbyCorreo',usersController.getUserbyCorreo );
 router.post('/validarsesion', usersController.validarUser);
 router.post('/crearUsuario', usersController.createUser);
+router.post('/crearUsuarioNoSql', recetaNoSqlController.createUsuario);
+
+// Ruta para obtener todos los utensilios
+router.get('/utensilios', recetaNoSqlController.getAllUtensilios);
 
 
 //rutas valoracion
@@ -36,6 +41,7 @@ router.get('/valoracionUsuario/:id',valoracionController.getValUid);//valoracion
 router.post('/crearValoracion',valoracionController.addVal);// añadir valoracion
 router.delete('/borrarValoracion/:id',valoracionController.delValId);// borrar valoracion
 router.put('/editarValoracion',valoracionController.modVal);// editar valoracion
+router.post('/crearValoracionNoSql', recetaNoSqlController.createValoracion);
 
 
 //rutas Ingrediente
@@ -46,6 +52,7 @@ router.post('/filtrarIngredienteId', ingredienteController.filterByIngrediente_i
 router.post('/filtrarNombre', ingredienteController.filterBynombre);
 router.post('/filtrarDescripcion', ingredienteController.filterByDescripcion);
 router.post('/filtrarUnidad_medida', ingredienteController.filterByUnidad_medida);
+router.post('/crearIngredienteNoSql', recetaNoSqlController.createIngrediente);
 
 
 //rutas Intruccion
@@ -56,4 +63,8 @@ router.post('/filtrarInstruccionId', instruccionController.filterByInstruccionId
 router.post('/filtrarRecetaId', instruccionController.filterByRecetaId);
 router.post('/filtrarDescripcion', instruccionController.filterByDescripcion);
 router.post('/filtrarTip', instruccionController.filterByTip);
+router.post('/crearInstruccionNoSql', recetaNoSqlController.createProcedimiento);
+
+router.post('/crearUtensilioNoSql', recetaNoSqlController.createUtensilio);
+
 module.exports = router;
