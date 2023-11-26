@@ -1,4 +1,4 @@
-const { Receta, Ingrediente, Valoracion ,Procedimiento, Utensilio, Usuario } = require('../../models/receta-R-noSql');
+const { Receta, Ingrediente, Valoracion, Utensilio } = require('../../models/receta-R-noSql');
 
 
 
@@ -13,57 +13,56 @@ exports.getAllrecetas = async (req, res) => {
     }
 };
 
+
+
 // Método para crear una nueva receta
 exports.createReceta = async (req, res) => {
-    const { titulo, descripcion, ingredientes, valoraciones, utensilios , procedimientos, correo } = req.body;
+  const { titulo, descripcion, imagen, ingredientes, utensilios, procedimientos, usuario } = req.body;
 
-    try {
-        // Buscar los ingredientes y utensilios en la base de datos
-        const dbIngredientes = await Promise.all(ingredientes.map(async (ingrediente) => {
-            return await Ingrediente.findOne({ nombre: ingrediente.nombre });
-        }));
+  try {
+    // Crear la nueva receta
+    const newReceta = new Receta({
+      titulo,
+      descripcion,
+      imagen,
+      ingredientes,
+      utensilios,
+      valoraciones: [],
+      procedimientos,
+      usuario: { usuario_id: usuario.usuario_id, correo: usuario.correo },
+    });
 
-        const dbUtensilios = await Promise.all(utensilios.map(async (utensilio) => {
-            return await Utensilio.findOne({ nombre: utensilio.nombre });
-        }));
+    // Guardar la receta en la base de datos
+    const recetaGuardada = await newReceta.save();
 
-        const dbValoraciones = await Promise.all(valoraciones.map(async (valoracion) => {
-            return await Valoracion.findOne({ Receta: valoracion.receta_id });
-        }));
-
-
-        // Crear la nueva receta
-        const newReceta = new Receta({
-            titulo,
-            descripcion,
-            ingredientes: dbIngredientes,
-            utensilios: dbUtensilios,
-            valoraciones: dbValoraciones,
-            procedimientos: procedimientos.map(procedimiento => new Procedimiento(procedimiento)),
-            correo,
-        });
-
-        const receta = await newReceta.save();
-        res.status(201).json(receta);
-
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error en el servidor');
-    }
-};
-// Controlador para filtrar por receta_id
+    // Enviar la receta guardada como respuesta
+    res.json(recetaGuardada);
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).send('Error en el servidor');
+  }
+};// Controlador para filtrar por _id
 exports.filterByreceta_id = async (req, res) => {
-    const { receta_id } = req.body;
+  const { receta_id } = req.body;
 
-    try {
-        const recetas = await Receta.find({ receta_id });
-        res.status(200).json(recetas);
-    } catch (err) {
-        console.error(err.message);
-        res.status(500).send('Error en el servidor');
+  console.log(receta_id); // Agregar este log para verificar el ID recibido
+
+  try {
+    const receta = await Receta.findById(receta_id);
+    console.log('Receta encontrada:', receta); // Agregar este log para verificar la receta encontrada
+
+    if (!receta) {
+      return res.status(404).json({ msg: 'Receta no encontrada' });
     }
+    res.status(200).json(receta);
+  } catch (err) {
+    console.error(err.message);
+    if (err.kind == 'ObjectId') {
+      return res.status(404).json({ msg: 'Receta no encontrada' });
+    }
+    res.status(500).send('Error en el servidor');
+  }
 };
-
 
 // Método para crear un nuevo Ingrediente
 exports.createIngrediente = async (req, res) => {
@@ -97,9 +96,9 @@ exports.createUtensilio = async (req, res) => {
   
   // Método para crear una nueva Valoracion
   exports.createValoracion = async (req, res) => {
-    const { Receta_id,usuario_id, comentario,puntuacion } = req.body;
+    const { Receta_id,usuario, comentario,puntuacion } = req.body;
   
-    const newValoracion = new Valoracion({ Receta_id,usuario_id, comentario,puntuacion });
+    const newValoracion = new Valoracion({ Receta_id,usuario, comentario,puntuacion });
   
     try {
       const valoracion = await newValoracion.save();
@@ -109,44 +108,56 @@ exports.createUtensilio = async (req, res) => {
       res.status(500).send('Error en el servidor');
     }
   };
+  // Método para actualizar una Receta con Valoraciones
+  exports.updateReceta = async (req, res) => {
+    const { receta_id } = req.params;
 
+    try {
+      // Buscar todas las valoraciones que coinciden con receta_id
+      const valoraciones = await Valoracion.find({ Receta_id: receta_id });
+
+      if (!valoraciones) {
+        return res.status(404).json({ msg: 'No se encontraron valoraciones para esta receta' });
+      }
+
+      // Buscar la receta
+      const receta = await Receta.findById(receta_id);
+      if (!receta) {
+        return res.status(404).json({ msg: 'Receta no encontrada' });
+      }
+
+    // Agregar las valoraciones a la lista de valoraciones de la receta
+    receta.valoraciones = valoraciones.map(valoracion => valoracion._id);
+
+    // Guardar la receta actualizada en la base de datos
+    const recetaActualizada = await receta.save();
+
+    // Enviar la receta actualizada como respuesta
+    res.status(200).json(recetaActualizada);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error en el servidor');
+  }
+};
   // Controlador para obtener todos los utensilios
   exports.getAllUtensilios = async (req, res) => {
     try {
-      const utensilios = await Utensilio.find();
+      const utensilios = await Utensilio.find({}, 'nombre');
       res.json(utensilios);
     } catch (err) {
       console.error(err.message);
       res.status(500).send('Error en el servidor');
     }
   };
-  
-  // Método para crear un nuevo Procedimiento
-  exports.createProcedimiento = async (req, res) => {
-    const { paso, descripcion } = req.body;
-  
-    const newProcedimiento = new Procedimiento({ paso, descripcion });
-  
+
+  // Controlador para obtener todas las ingredientes
+  exports.getAllingredientes = async (req, res) => {
     try {
-      const procedimiento = await newProcedimiento.save();
-      res.status(201).json(procedimiento);
+      const ingredientes = await Ingrediente.find({}, 'nombre');
+      res.json(ingredientes);
     } catch (err) {
-      console.error(err);
+      console.error(err.message);
       res.status(500).send('Error en el servidor');
     }
   };
-  
-  // Método para crear un nuevo Usuario
-  exports.createUsuario = async (req, res) => {
-    const { nombre, email } = req.body;
-  
-    const newUsuario = new Usuario({ nombre, email });
-  
-    try {
-      const usuario = await newUsuario.save();
-      res.status(201).json(usuario);
-    } catch (err) {
-      console.error(err);
-      res.status(500).send('Error en el servidor');
-    }
-  };
+
