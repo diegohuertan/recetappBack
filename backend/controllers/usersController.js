@@ -77,23 +77,7 @@ exports.obtenerUser = (req, res) => {
         }
     });
 }
-exports.validarEmail=(req,res)=>{
-    const {correo}=req.body;
-    Usuario.validarCorreo(correo,(err,result)=>{
-        if(err){
-            console.error(err.message);
-            res.status(500).send('Error en el servidor');
-        }else{
-            if(result.succes==true){
-                res.status(200).json({success:true,message:'Correo valido'});
-                console.log(result.succes);
-            } else{
-                res.status(200).json({message:'Correo previamente registrado'});
-                console.log(result.succes)
-            }
-        }
-    })
-}
+
 exports.deleteUserByid = (req, res) => {
     const { id } = req.params;
 
