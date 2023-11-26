@@ -115,6 +115,25 @@ static create(usuarios, callback) {
     }
 
     // Puedes agregar métodos para actualizar y eliminar contactos si es necesario
-}
 
+static validarCorreo(correo,callback){
+    connection.query(
+        'SELECT COUNT(*) AS count FROM usuario WHERE correo=?',[correo],(error,results)=>{
+            if(error){
+                console.error('Error al realizar la consulta',error);
+                callback(error,null);
+            }else{
+
+                const count=results[0].count;
+                console.log('Count:',count);
+                if (count==1){
+                    callback(null,{succes:false,message:'Ya existe usuario con este correo'});
+                } else if (count==0){
+                    callback(null,{succes:true,message:'Correo no registrado'});
+                }
+            }
+        }
+    )
+}
+}
 module.exports = Usuario;
