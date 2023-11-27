@@ -20,6 +20,8 @@ router.get('/getRecetasConCantidadDeIngredientes', recetaController.getRecetasCo
 router.get('/getRecetasConPromedioValoracion', recetaController.getRecetasConPromedioValoracion);
 router.get('/getUsuariosConCantidadDeValoraciones', recetaController.getUsuariosConCantidadDeValoraciones);   
 router.post('/crearReceta', recetaNoSqlController.createReceta);
+router.get('/filterByUsuario', recetaNoSqlController.filterByUsuario);
+
 router.post('/actualizarReceta', recetaNoSqlController.updateReceta);
 
 
