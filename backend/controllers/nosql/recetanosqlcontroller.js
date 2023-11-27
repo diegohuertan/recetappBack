@@ -106,15 +106,40 @@ exports.createUtensilio = async (req, res) => {
     }
   };
   
-  // Método para crear una nueva Valoracion
+  // Método para crear una nueva Valoracion y agregarla a una Receta
   exports.createValoracion = async (req, res) => {
-    const { Receta_id,usuario, comentario,puntuacion } = req.body;
-  
-    const newValoracion = new Valoracion({ Receta_id,usuario, comentario,puntuacion });
-  
+    const { Receta_id, usuario, comentario, puntuacion } = req.body;
+
+    const newValoracion = new Valoracion({ Receta_id, usuario, comentario, puntuacion });
+
     try {
+      // Guardar la nueva valoración
       const valoracion = await newValoracion.save();
-      res.status(201).json(valoracion);
+      console.log('Valoración guardada:', valoracion);
+
+      // Buscar la receta
+      let receta = await Receta.findById(Receta_id);
+
+      if (!receta) {
+        return res.status(404).json({ msg: 'Receta no encontrada' });
+      }
+
+      console.log('Receta antes de agregar valoración:', receta);
+
+      // Agregar la nueva valoración al array de valoraciones de la receta
+      receta.valoraciones.push(valoracion._id);
+
+      console.log('Receta después de agregar valoración:', receta);
+
+      // Guardar la receta actualizada
+      await receta.save();
+      
+      // Poblar las valoraciones en la receta
+      receta = await receta.populate('valoraciones');
+
+      console.log('Receta después de poblar valoraciones:', receta);
+
+      res.status(201).json(receta);
     } catch (err) {
       console.error(err);
       res.status(500).send('Error en el servidor');
@@ -122,35 +147,52 @@ exports.createUtensilio = async (req, res) => {
   };
   // Método para actualizar una Receta con Valoraciones
   exports.updateReceta = async (req, res) => {
-    const { receta_id } = req.params;
+    const { receta_id } = req.body;
+
+    console.log(receta_id); // Agregar este log para verificar el ID recibido
 
     try {
-      // Buscar todas las valoraciones que coinciden con receta_id
-      const valoraciones = await Valoracion.find({ Receta_id: receta_id });
+      // Buscar la receta y cargar las valoraciones
+      const receta = await Receta.findById(receta_id).populate('valoraciones');
 
-      if (!valoraciones) {
-        return res.status(404).json({ msg: 'No se encontraron valoraciones para esta receta' });
-      }
+      console.log('Receta encontrada:', receta); // Agregar este log para verificar la receta encontrada
 
-      // Buscar la receta
-      const receta = await Receta.findById(receta_id);
       if (!receta) {
         return res.status(404).json({ msg: 'Receta no encontrada' });
       }
 
-    // Agregar las valoraciones a la lista de valoraciones de la receta
-    receta.valoraciones = valoraciones.map(valoracion => valoracion._id);
+      res.status(200).json(receta);
+    } catch (err) {
+      console.error(err.message);
+      if (err.kind == 'ObjectId') {
+        return res.status(404).json({ msg: 'Receta no encontrada' });
+      }
+      res.status(500).send('Error en el servidor');
+    }
+  };
+// Método para buscar una Receta por su ID y obtener todas sus Valoraciones
+exports.getRecetaWithValoraciones = async (req, res) => {
+  const { Receta_id } = req.body;
 
-    // Guardar la receta actualizada en la base de datos
-    const recetaActualizada = await receta.save();
+  try {
+    // Buscar la receta y poblar el campo 'valoraciones'
+    const receta = await Receta.findOne({ _id : Receta_id}).populate('valoraciones');
+    console.log('Receta encontrada:', Receta); // Agregar este log para verificar la receta encontrada
 
-    // Enviar la receta actualizada como respuesta
-    res.status(200).json(recetaActualizada);
+    if (!receta) {
+      return res.status(404).json({ msg: 'Receta no encontrada' });
+    }
+
+    res.status(200).json(receta);
   } catch (err) {
-    console.error(err);
+    console.error(err.message);
+    if (err.kind == 'ObjectId') {
+      return res.status(404).json({ msg: 'Receta no encontrada' });
+    }
     res.status(500).send('Error en el servidor');
   }
 };
+  
   // Controlador para obtener todos los utensilios
   exports.getAllUtensilios = async (req, res) => {
     try {
