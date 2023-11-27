@@ -13,7 +13,7 @@ const utensilioSchema = new mongoose.Schema({
 
 // Define el esquema para la colección "valoraciones"
 const valoracionSchema = new mongoose.Schema({
-  Receta_id: String,
+  Receta_id: { type: mongoose.Schema.Types.ObjectId, ref: 'Receta' },
   usuario: { usuario_id: Number, correo: String },
   comentario: String,
   puntuacion: Number,
@@ -27,7 +27,7 @@ const recetaSchema = new mongoose.Schema({
   descripcion: String,
   imagen: String,
   ingredientes: [{nombre: String}], // Esto crea una relación con la colección "ingredientes"
-  valoraciones: [valoracionSchema], // Esto crea una relación con la colección "valoraciones"
+  valoraciones: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Valoracion' }],
   utensilios: [{nombre: String}],
   procedimientos: [{
     Numpaso: Number,

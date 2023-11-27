@@ -20,7 +20,7 @@ router.get('/getRecetasConCantidadDeIngredientes', recetaController.getRecetasCo
 router.get('/getRecetasConPromedioValoracion', recetaController.getRecetasConPromedioValoracion);
 router.get('/getUsuariosConCantidadDeValoraciones', recetaController.getUsuariosConCantidadDeValoraciones);   
 router.post('/crearReceta', recetaNoSqlController.createReceta);
-router.put('/actualizarReceta/:receta_id', recetaNoSqlController.updateReceta);
+router.post('/actualizarReceta', recetaNoSqlController.updateReceta);
 
 
 //rutas usuario
@@ -38,7 +38,7 @@ router.get('/utensilios', recetaNoSqlController.getAllUtensilios);
 
 //rutas valoracion
 router.get('/valoraciones', valoracionController.getAllval);
-router.get('/valoracionReceta/:id',valoracionController.getValRid);//valoraciones segun id receta
+router.post('/valoracionReceta',recetaNoSqlController.getRecetaWithValoraciones);//valoraciones segun id receta
 router.get('/valoracionUsuario/:id',valoracionController.getValUid);//valoraciones segun id usuario
 router.post('/crearValoracionsql',valoracionController.addVal);// añadir valoracion
 router.delete('/borrarValoracion/:id',valoracionController.delValId);// borrar valoracion
