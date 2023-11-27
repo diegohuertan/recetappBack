@@ -63,7 +63,19 @@ exports.filterByreceta_id = async (req, res) => {
     res.status(500).send('Error en el servidor');
   }
 };
+exports.filterByUsuario= async(req,res) =>{
+  const {usuario}= req.body;
+  try {
+    const recetasEncontradas = await Receta.find({
+      usuario: usuario
+    });
 
+    res.json(recetasEncontradas);
+    console.log("Recetas:",recetasEncontradas);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
 // Método para crear un nuevo Ingrediente
 exports.createIngrediente = async (req, res) => {
     const { nombre, cantidad } = req.body;
