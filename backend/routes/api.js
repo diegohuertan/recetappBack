@@ -33,7 +33,7 @@ router.post('/validarsesion', usersController.validarUser);
 router.post('/crearUsuario', usersController.createUser);
 router.post('/crearUsuarioNoSql', recetaNoSqlController.createReceta);
 router.post('/validarCorreo',usersController.validarEmail);
-
+router.post('/filterByUsuario', recetaNoSqlController.filterByUsuario);
 // Ruta para obtener todos los utensilios
 router.get('/utensilios', recetaNoSqlController.getAllUtensilios);
 
